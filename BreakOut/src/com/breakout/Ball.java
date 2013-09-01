@@ -136,14 +136,21 @@ public class Ball extends Sprite implements Commons, Observer{
 		if(isCollidingWithBrick())
 		{
 			System.out.println("Congrats!");
-			timerTask.stop();
+			//timerTask.stop();
 			board.panelRight.repaint();
+			board.isRunning = false;
+			board.msgLabel.setText("You win!  ");
+			timerTask.unRegister(this);
+			timerTask.unRegister(paddle);
 		}
 		
 		if(isGameOver())
 		{
 			System.out.println("Game Over");
-			timerTask.stop();
+			//timerTask.stop();
+			//timerTask.isRunning = false;
+			board.isRunning = false;
+			board.msgLabel.setText("Game Over!");
 		}
 		x += xdir;
 		y += ydir;

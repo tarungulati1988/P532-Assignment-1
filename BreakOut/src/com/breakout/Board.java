@@ -30,11 +30,14 @@ import javax.swing.border.LineBorder;
  */
 public class Board extends JFrame implements Commons{
 	
+	public static boolean isRunning;
+	public static boolean isFirstTime;
 	private JPanel contentPane;
 	public static Board boardObj;
 	public static JPanel panelRight;
 	public JPanel panelLeft;
 	public JLabel timeLabel;
+	public static JLabel msgLabel;
 	
 	Ball ball;
     Paddle paddle;
@@ -46,13 +49,17 @@ public class Board extends JFrame implements Commons{
 	 */
 	public Board() {
 		
+		isRunning = false;
+		isFirstTime = true;
+		
 		panelRight = new JPanel();
 		panelLeft = new JPanel();
 		timeLabel = new JLabel();
+		msgLabel = new JLabel();
 		
 		paddle = new Paddle();
 		brick = new Brick();
-		timerTask = new TimerTask();
+		timerTask = new TimerTask(boardObj);
 		
 		ball = new Ball(paddle, brick, this.boardObj, timerTask);
 		
@@ -80,9 +87,14 @@ public class Board extends JFrame implements Commons{
 		layeredPane.add(panelLeft);
 		
 		timeLabel.setFont(new Font("SansSerif",Font.BOLD, 22));
+		timeLabel.setText("00:00");
 		panelLeft.add(timeLabel);
 		
-		timerTask = new TimerTask();
+		msgLabel.setFont(new Font("SansSerif",Font.BOLD, 12));
+		msgLabel.setForeground(Color.RED);
+		panelLeft.add(msgLabel);
+		
+		//timerTask = new TimerTask(boardObj);
 		addKeyListener(new StrokeAdapter());
 	}
 	
@@ -93,7 +105,7 @@ public class Board extends JFrame implements Commons{
 		public void keyPressed(KeyEvent ke) {
 			int key = ke.getKeyCode();
 			
-			if(key == KeyEvent.VK_SPACE)
+			if(key == KeyEvent.VK_SPACE && isFirstTime == true)
 			{
 				//Register the gameTimer
 		    	GameTimer gameTimer = new GameTimer();
@@ -104,21 +116,26 @@ public class Board extends JFrame implements Commons{
 		    	
 		    	//Register Paddle
 		    	timerTask.register(paddle, boardObj);
-		    	//Run the timerTask (Observable)
-		    	//timerTask.run();
-			}if(key == KeyEvent.VK_LEFT){
+		    	
+				timerTask.run();
+		    	isRunning = true;
+		    	isFirstTime = false;
+		    	
+			}if(key == KeyEvent.VK_LEFT && isRunning == true){
 				paddle.move("left");
 				//Board boardObj = new Board();
 				//boardObj.repaint();
 				//timerTask.run();
-			}else if(key == KeyEvent.VK_RIGHT){
+			}else if(key == KeyEvent.VK_RIGHT && isRunning == true){
 				paddle.move("right");
 			}
-			timerTask.run();
 		}
 		
 		public void keyReleased(KeyEvent ke){
-	        paddle.KeyReleased();
+			if(isRunning == true)
+			{
+				paddle.KeyReleased();
+			}
 		}
 	}
 	
@@ -162,8 +179,9 @@ public class Board extends JFrame implements Commons{
 	    	 * Brick
 	    	 * fillRect(x, y, width, height)
 	    	 */
-	        g.setColor(Color.BLUE);
+			g.setColor(Color.BLUE);
 			g.fillRect(brick.getX(), brick.getY(), brick.width, brick.height);
+			
 	    }
 
 }

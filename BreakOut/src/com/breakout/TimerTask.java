@@ -24,14 +24,16 @@ import javax.swing.Timer;
 
 public class TimerTask implements Observable{
 	public Timer t;
+	public Board board;
 	static boolean isRunning = true;
 	//List<Observer> observersList;
 	Map<Observer, Board> observerList;
 	
-	public TimerTask()
-	{
+	public TimerTask(Board board)
+	{	
 		t = new Timer(10, new TimerTaskListener());
 		observerList = new HashMap<Observer, Board>();
+		this.board = board;
 	}
 	
 	public void run()
@@ -39,17 +41,17 @@ public class TimerTask implements Observable{
 		t.start();
 	}
 	
-	public void stop()
+	/*public void stop()
 	{
 		isRunning = false;
-	}
+	}*/
 	
 	class TimerTaskListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			notifyObservers();
 			
-			if(TimerTask.isRunning == false)
+			if(board.isRunning == false)
 			{
 				t.stop();
 			}
@@ -64,7 +66,18 @@ public class TimerTask implements Observable{
 
 	@Override
 	public void unRegister(Observer observer) {
-		observerList.remove(observer);	
+		//observerList.remove(observer);
+		/*Iterator it = observerList.entrySet().iterator();
+		
+		while(it.hasNext())
+		{
+			Map.Entry entry = (Map.Entry)it.next();
+			Observer ob = (Observer)entry.getKey();
+			if(ob.equals(observer))
+			{
+				it.remove();
+			}
+		}*/
 	}
 
 	@Override

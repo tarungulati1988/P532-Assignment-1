@@ -12,6 +12,7 @@ package com.breakout;
  *
  */
 public class Brick extends Sprite{
+	
 	public Brick()
 	{
 		x = 400;

@@ -27,11 +27,16 @@ public class GameTimer implements Observer{
 	public void draw(Board com) {
 		JLabel label = (JLabel)com.timeLabel;
 		
-		String sec = String.valueOf((timeElapsed/1000)%60);
-		String min = String.valueOf(timeElapsed/(60*1000));
+		//String sec = String.valueOf((timeElapsed/1000)%60);
+		//String min = String.valueOf(timeElapsed/(60*1000));
 		
-		label.setText(min+":"+sec);
+		int sec = (int)((timeElapsed/1000)%60);
+		int min = (int)(timeElapsed/(60*1000));
+		
+		String secString = String.format("%02d", sec);
+		String minString = String.format("%02d", min);
+		
+		label.setText(minString+":"+secString);
 		label.repaint();
 	}
-
 }
